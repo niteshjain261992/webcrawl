@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function myFunction() {
+            if (localStorage.getItem("username")) {
+                const x = document.getElementById("not_login");
+                x.style.display = "none";
+            } else {
+                const x = document.getElementById("login");
+                x.style.display = "none";
+            }
+        }
+
+
+    </script>
+</head>
+<body onload="myFunction()">
+    <div id="not_login" style="display: block">
+        <form onsubmit="onsubmit()">
+            <input type="text" name="username" id="username"/>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div id="login" style="display: block">
+        Login
+    </div>
+<script>
+    function onsubmit() {
+        var username = document.getElementById("username").valueOf();
+        debugger
+        localStorage.setItem("username", username)
+        // window.location.reload();
+    }
+</script>
+</body>
+</html>
