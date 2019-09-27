@@ -7,6 +7,6 @@ module.exports = (parent)=> {
     });
 
     parent.get("/search", (req, res)=> {
-
+        crawler.Search(req, res);
     })
 };
