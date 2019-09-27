@@ -5,9 +5,8 @@
     PhantonJS   2.1.1
 
 
-#### API:
-
-#####WebCrawler:
+#### API:  
+    WebCrawler:  
     URL: /webcrawl
     Method: POST
     Headers: {
@@ -17,7 +16,8 @@
         "domain": <website domain>
     }
     
-#####Search: 
+    
+    Search:  
     URL: /search
     Method: GET
     Query: {
