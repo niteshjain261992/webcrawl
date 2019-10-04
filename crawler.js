@@ -131,6 +131,7 @@ function getURLContents(req, domain, urls) {
 
         for (let i = 0; i < urls.length; i++) {
             try {
+                console.log("i+++++", i);
                 const content = await getContent(urls[i].loc);
                 const { title, keywords, description } = await parseContent(content);
                 const options = {
@@ -164,6 +165,7 @@ class Crawler {
                 return getURLs(sitemap);
             })
             .then((urls) => {
+                console.log("urls+++", urls);
                 return getURLContents(req, domain, urls);
             })
             .then(()=> {
@@ -182,7 +184,7 @@ class Crawler {
         const skip = parseInt(page) * 10;
         if (!query) return res.status(406).send({ error: 'Missing Query' });
 
-        db.crawler.find({$text: { $search: query }}, {sort: { priority: -1 }, limit: 10, skip }).toArray((err, response)=> {
+        req.db.collection("crawler").find({$text: { $search: query }}, {sort: { priority: -1 }, limit: 10, skip }).toArray((err, response)=> {
             res.status(200).send({ data: response });
         })
     }
