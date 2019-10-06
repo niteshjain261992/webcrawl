@@ -1,5 +1,5 @@
 const request = require("request");
-const parser = require('xml2json');
+const convert = require('xml-js');
 const path = require('path');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
@@ -29,7 +29,7 @@ function getSiteMap(url) {
             if (headers["content-type"].indexOf("application/xml") === -1) return reject("Invalid domain or sitemap");
 
             try {
-                const json = parser.toJson(body);
+                const json = convert.xml2json(body, {compact: true, spaces: 4});
                 resolve(JSON.parse(json))
             } catch (e) {
                 reject("Invalid domain or sitemap");
