@@ -41,7 +41,14 @@ function getSiteMap(url) {
 function getURLs(sitemap) {
     return new Promise(async (resolve, reject) => {
         if (sitemap.urlset) {
-            const sitemap_urls = sitemap.urlset.url;
+            let sitemap_urls = sitemap.urlset.url;
+            sitemap_urls = sitemap_urls.map(sitemap_url=> {
+                return {
+                    loc: sitemap_url.loc._text,
+                    lastmod: sitemap_url.lastmod._text,
+                    changefreq: sitemap_url.changefreq._text,
+                    priority: sitemap_url.priority._text
+                }});
             resolve(sitemap_urls);
         } else if (sitemap.sitemapindex) {
             const sitemaps = sitemap.sitemapindex.sitemap;
@@ -98,9 +105,9 @@ function deleteAllDomainRecords(req, domain) {
 
 function addRecord(req, option) {
     return new Promise((resolve, reject)=> {
-        req.db.collection("crawler").insert(option, (err, response)=> {
+        req.client.update(option, (err, response)=> {
             resolve();
-        })
+        });
     })
 }
 
@@ -127,20 +134,18 @@ function parseContent(content) {
 
 function getURLContents(req, domain, urls) {
     return new Promise(async (resolve, reject) => {
-        await deleteAllDomainRecords(req, domain);
+        // await deleteAllDomainRecords(req, domain);
 
         for (let i = 0; i < urls.length; i++) {
             try {
                 console.log("i+++++", i);
                 const content = await getContent(urls[i].loc);
-                const { title, keywords, description } = await parseContent(content);
+                const { title } = await parseContent(content);
                 const options = {
                     domain,
                     link: urls[i].loc,
                     priority: parseFloat(urls[i].priority),
                     title,
-                    keywords,
-                    description,
                     content
                 };
                 await addRecord(req, options);
@@ -184,9 +189,18 @@ class Crawler {
         const skip = parseInt(page) * 10;
         if (!query) return res.status(406).send({ error: 'Missing Query' });
 
-        req.db.collection("crawler").find({$text: { $search: query }}, {sort: { priority: -1 }, limit: 10, skip }).toArray((err, response)=> {
-            res.status(200).send({ data: response });
-        })
+        const objQuery = req.client.query().q({
+            domain: query,
+            link: query,
+            title: query,
+            content: query
+        });
+        req.client.search(objQuery, function (err, result) {
+            if (err) {
+                return res.status(406).send({ error: 'Error in db' });
+            }
+            res.status(200).send({ data: result.response.docs });
+        });
     }
 
 }

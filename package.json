@@ -13,9 +13,9 @@
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
     "jsdom": "^15.1.1",
-    "mongodb": "^3.3.2",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
+    "solr-node": "^1.2.1",
     "system": "^2.0.1",
     "webpage": "^0.3.0",
     "xml-js": "^1.6.11"

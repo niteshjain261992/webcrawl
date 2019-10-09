@@ -16,7 +16,7 @@ app.use(logger('dev'));
 // database connection
 app.use(async (req, res, next) => {
     try {
-        req.db = await database.connect();
+        req.client = await database.connect();
         next()
     } catch (e) {
         res.status(400).send({ error: "Error in database connection" });
@@ -25,4 +25,5 @@ app.use(async (req, res, next) => {
 
 require("./routes")(app);
 
+console.log("Connected with port 3000");
 app.listen(3000);
